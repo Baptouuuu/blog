@@ -36,7 +36,14 @@ So, why don't we stick with their original intentions?
 
 ## Single Page Application
 
+In the desing I think we should use, let's start with the front end and the principle of the Single Page Applications. Well, when I talk about this I think more about the idea that front end logic should be done via front end code. Seems logic, right?
 
+So to be a bit more descriptice, we need to start building our apps via the interface as it's part is most likely to change when creating a project. If we want to be efficient, we must isolate the html (and css) in the app structure design. The idea behind that is to cut the current process where we have designers making html templates and then developers integrating them in backend code to generate them with appropriate data.
+
+That's where the principle of SPA comes into place!
+
+Wouldn't be easier if the raw templates were left as is with data placeholders and then data would be injected into them via Javascript? We have now at our disposal plenty of js frameworks to help us just do that. But I think there're all missing a key point: separation of concerns. In general, for templating there are using js strings to represent the html and they all put to much logic in the template!
+We must keep aside the template and the app logic so the designer can come back to it's html and still find it readable; and don't have to bother a developer to know where to modify the html. I'm sure both sides would like that.
 
 ## Offline first
 
