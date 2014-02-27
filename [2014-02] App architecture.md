@@ -36,6 +36,8 @@ So, why don't we stick with their original intentions?
 
 ## Single Page Application
 
+### Structure
+
 In the desing I think we should use, let's start with the front end and the principle of the Single Page Applications. Well, when I talk about this I think more about the idea that front end logic should be done via front end code. Seems logic, right?
 
 So to be a bit more descriptice, we need to start building our apps via the UI as this part is the most likely to change when creating a project. If we want to be efficient, we must isolate the html (and css) in the app structure design. The idea behind that is to cut the current process where we have designers making html templates and then developers integrating them in backend code to generate them with appropriate data.
@@ -44,6 +46,29 @@ That's where the principle of SPA comes into place!
 
 Wouldn't be easier if the raw templates were left as is with data placeholders and then data would be injected into them via Javascript? We have now at our disposal plenty of js frameworks to help us to just do that. But I think there're all missing a key point: separation of concerns. In general, for templating there are using js strings to represent the html and they all put to much logic in the template!
 We must keep aside the template and the app logic so the designer can come back to it's html and still find it readable; and don't have to bother a developer to know where to modify the html. I'm sure both sides would like that.
+
+Think of it as 2 layers, with the JS sitting on top of the html:
+
+>    Javascript  ---
+> ----------------  | (data injection)
+>       HTML     <--
+
+But to do that we need to create templating engines only based on the DOM with the goal to inject data and nothing more, so we can respect the separation of concerns we seek.
+By keeping the purpose of the engine restrained, we can limit the amount of markup and consequently make it more readeable.
+
+### User context
+
+After talking about how to structure the front, let's continue with what we should put in our javascript.
+
+Our apps are all about user data and our code is contexted to it. But we only use javascript to improve the UI and make it dynamic, forgetting we can do way more than that nowadays.
+
+We try, via sessions, to keep the track of what the user is doing, but it's hard task as we need to send back and forth data about the user and retain some of it on the server to deliver appropriate pages.
+The web paradigm "a url = a document" is no longer relevant in the case of an application.
+
+Deliver your app under a single url and manage all user interactions in this single page.
+
+It will be far easier to handle what is the user action context as you managed it within the same page. A simple example would be a page where the user do some action and then is redirected to another page. Now he wants to go back to the previous page, how do you know in which state the page was? The answer is simple: you can't! Remember that the **http is stateless**.
+
 
 ## Offline first
 
