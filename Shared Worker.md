@@ -1,9 +1,9 @@
 # Shared Worker [JS]
 
-Last week I was thinkig one of my personal projects and what kind of evolution I could make. And a came across one requiring two browser tabs (on the same domain) to communicate with each other. And I remembered one article read long ago about shared web worker that could help me do that.
+Last week I was thinking about one of my personal projects and what kind of evolution I could make. And a came across one requiring two browser tabs (on the same domain) to communicate with each other. And I remembered one article read long ago about shared web worker that could help me do that.
 I've spent the whole week trying to find this article and couldn't find it back. The only resources I did find was a short article on [SitePoint](http://www.sitepoint.com/javascript-shared-web-workers-html5/) dating back to 2011 and the [specifications](http://www.whatwg.org/specs/web-apps/current-work/multipage/workers.html#shared-workers) on [whatwg.org](http://whatwg.org).
 
-A strange thing is the disappearance of the documention on the [Mozilla Developper Network](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker).
+Another strange thing is the disappearance of the documention on the [Mozilla Developper Network](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker).
 
 So I decided to do an article on the subject with a use case and code examples.
 
@@ -49,7 +49,7 @@ Before jumping to the use case, let's explain the code above.
 
 As you can see there's a lot of `port`, think of it as a connection. Remember, multiple pages can connect the same worker. So when you listen to events or send messages it's done on the `port` object.
 
-In the examples,I've shown 2 event names but there is a third named `close` and is available in the worker only. So in the order, we instanciate our worker, we define our messages listeners then say "ok connect me to the worker". This last one will trigger the `connect` event in the worker, in the listener we listen to the messages that may come through this connections and finally says "I'm ready too,let's do some work". Now the threads can communicate with each other.
+In the examples, I've shown 2 event names but there is a third named `close` and is only available in the worker. So in the order, we instanciate our worker, we define our messages listeners then say "ok connect me to the worker". This last one will trigger the `connect` event in the worker, in the listener we wait for messages that may come through this connections and finally says "I'm ready too, let's do some work". Now the threads can communicate with each other.
 
 The `close` event, not appearing in the code, remains really important. As the worker is only destroyed when all the tabs connected to the worker are closed, if you don't close properly the connection to the worker and reload your page and re-instanciate the worker, when it will post a message you will receive it twice and I'm sure you don't want that.
 
@@ -74,21 +74,21 @@ self.addEventListener('close', function (event) {
 }.bind(self), false);
 ```
 
-Above we the keep the track of all the opened connections, and remove them when the `worker.port.close()` is called; you will in the use case why this is useful.
+Above we keep the track of all the opened connections, and remove them when the `worker.port.close()` is called; you will in the use case why this is useful.
 
 
 ## Use case
 
 So now that we know how it works and the basic codes, let's see in what it can be useful. For the example we will assume we have 2 web apps hosted on the same domain. The first is a project management app and the second one is about finance handling. As nowadays all apps are inter-connected, we want it too for our apps. So it be great if when we finish/start new tasks in the management app it's reported in the finance one.
 
-In general, the first though is: let's do some ajax to send data and check if there's modification from the otherside.
+In general, the first thought is: let's do some ajax to send data and check if there's modification from the otherside.
 
 The main problem with this approach is that you need to communicate with the server. But as you're part of the cool kids, you've designed your app offline first and learned to build your apps without the need to rely on the server for everything.
-And this where the SharedWorker help us do what required a server before; keeping the paradigm of offline first.
+And this is where the SharedWorker help us do what required a server before; keeping the paradigm of offline first.
 
 With the worker you can transfer data between tabs only through javascript.
 
-Cool but how do we do it?
+Cool, but how do we do it?
 
 ```js
 //page1.js
@@ -195,7 +195,7 @@ In both pages we instanciate our worker and identify themselves via the first `p
 In the first page we listen messages coming from the worker and if the action is `data:request`, we send back to the source the data of our app.
 In the second one, we send our data request to the other page and listen to the response.
 
-The code of the worker is mainly boilerplate code to setup named ports. Then it only comes down to the check on `source`, `dest` and `action` attributes on the message data; if there are all available, we post the message data to the appropriate port. Simple as that.
+The code of the worker is mainly boilerplate code to setup named ports. Then it only comes down to the check on `source`, `dest` and `action` attributes on the message event data; if there are all available, we post the message data to the appropriate port. Simple as that.
 
 With not that much of code you can setup directional communication between tabs/apps, and is extensible to as many sources that you want. However the code above does not cover the case where the user open the same app in multiple tabs, it would break the mechanism of identification. But it could be a good way to check if the user launched the same app twice, in the identification code in the worker if we see a source is already defined with the same name, we post a message back and alert the user to only use one instance of the app (and don't forget to remove the port from the `ports` array).
 
@@ -227,6 +227,7 @@ The worker file, and files loaded inside it, must be on the same domain and resp
 ## Conclusion
 
 Some last words on the subject, I hope I helped you understand what kind of stuff you can do with Shared Workers and raised some ideas in your minds.
+
 The only problem I encountered was the debug part, Chrome Dev Tools allows to debug workers but not shared ones. So if someone knows how to do it, please leave a comment on the issue related to this article, thanks.
 
 And for browser compatibility, please refer to our dearest friend: [caniuse.com](http://caniuse.com/#feat=sharedworkers). Unfortunately, it's pretty limited right now.
