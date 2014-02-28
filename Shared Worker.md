@@ -15,10 +15,10 @@ It's an object you instanciate on your page, taking the path to a javascript fil
 
 Another key point is that every new instanciation on the same file will not create a new thread, but will connect to the first thread.
 
->         (Worker thread)
->           /        \
->          /          \
-> (Tab 1 thread) (Tab 2 thread)
+>                    _______  (Tab 1 thread)
+>                  /
+>     (Worker thread)
+>                  \ _______  (Tab 2 thread)
 
 If you don't see yet in what this is really cool, wait for the use case.
 
