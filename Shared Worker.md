@@ -153,7 +153,7 @@ self.addEventListener('connect', function (event) {
     port.addEventListener('message', function (e) {
 
         if (e.data.action === 'identification') {
-            identities[e.data.source] = ports.indexOf(e.source);
+            identities[e.data.source] = ports.indexOf(port);
         }
 
         if (
@@ -164,7 +164,7 @@ self.addEventListener('connect', function (event) {
             ports[identities[e.data.dest]].postMessage(e.data);
         }
 
-    }.bind(self), false);
+    }.bind(this), false);
 
     port.start();
 }.bind(self), false);
