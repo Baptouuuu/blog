@@ -79,3 +79,123 @@ Above we the keep the track of all the opened connections, and remove them when 
 
 ## Use case
 
+So now that we know how it works and the basic codes, let's see in what it can be useful. For the example we will assume we have 2 web apps hosted on the same domain. The first is a project management app and the second one is about finance handling. As nowadays all apps are inter-connected, we want it too for our apps. So it be great if when we finish/start new tasks in the management app it's reported in the finance one.
+
+In general, the first though is: let's do some ajax to send data and check if there's modification from the otherside.
+
+The main problem with this approach is that you need to communicate with the server. But as you're part of the cool kids, you've designed your app offline first and learned to build your apps without the need to rely on the server for everything.
+And this where the SharedWorker help us do what required a server before; keeping the paradigm of offline first.
+
+With the worker you can transfer data between tabs only through javascript.
+
+Cool but how do we do it?
+
+```js
+//page1.js
+var worker = new SharedWorker('shared-worker.js');
+worker.port.addEventListener('message', function (event) {
+
+    var source = event.data.source,
+        action = event.data.action;
+
+    if (action === 'data:request') {
+        this.postMessage({
+            source: 'page1',
+            action: 'data:request:answer',
+            dest: source,
+            data: retrieveLocallyStoredData()
+        });
+    }
+
+}.bind(worker.port), false);
+worker.port.start();
+worker.port.postMessage({
+    source: 'page1',
+    action: 'identification'
+});
+```
+
+```js
+//page2.js
+var worker = new SharedWorker('shared-worker.js');
+worker.port.addEventListener('message', function (event) {
+
+    var source = event.data.source,
+        action = event.data.action;
+
+    if (action === 'data:request:answer' && source === 'page1') {
+        computeData(event.data.data);
+    }
+
+}.bind(worker.port), false);
+worker.port.start();
+worker.port.postMessage({
+    source: 'page2',
+    action: 'identification'
+});
+worker.port.postMessage({
+    source: 'page2',
+    action: 'data:request',
+    dest: 'page1'
+});
+```
+
+```js
+//shared-worker.js
+var ports = [],
+    identities = {};
+
+self.addEventListener('connect', function (event) {
+    var port = event.source;
+
+    ports.push(port);
+
+    port.addEventListener('message', function (e) {
+
+        if (e.data.action === 'identification') {
+            identities[e.data.source] = ports.indexOf(e.source);
+        }
+
+        if (
+            e.data.source &&
+            e.data.dest &&
+            e.data.action
+        ) {
+            ports[identities[e.data.dest]].postMessage(e.data);
+        }
+
+    }.bind(self), false);
+
+    port.start();
+}.bind(self), false);
+
+self.addEventListener('close', function (event) {
+    var idx = ports.indexOf(event.source);
+
+    //keeps in sync source name and index
+    for (var source in identities) {
+        if (identities.hasOwnProperty(source)) {
+            if (identities[source] === idx) {
+                delete identities[source];
+            } else if (identities[source] > idx) {
+                identities[source]--;
+            }
+        }
+    }
+
+    ports.slice(idx, idx);
+
+}.bind(self), false);
+```
+
+So lots of code here, I'll explain what it does.
+
+In both pages we instanciate our worker and identify themselves via the first `postMessage`. By default the API does not allow us to name the different connections, so this is how I found to do it so far.
+
+In the first page we listen messages coming from the worker and if the action is `data:request`, we send back to the source the data of our app.
+In the second one, we send our data request to the other page and listen to the response.
+
+The code of the worker is mainly boilerplate code to setup named ports. Then it only comes down to the check on `source`, `dest` and `action` attributes on the message data; if there are all available, we post the message data to the appropriate port. Simple as that.
+
+With not that much of code you can setup directional communication between tabs/apps, and is extensible to as many sources that you want. However the code above does not cover the case where the user open the same app in multiple tabs, it would break the mechanism of identification. But it could be a good way to check if the user launched the same app twice, in the identification code in the worker if we see a source is already defined with the same name, we post a message back and alert the user to only use one instance of the app (and don't forget to remove the port from the `ports` array).
+
