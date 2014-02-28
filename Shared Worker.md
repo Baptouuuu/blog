@@ -211,3 +211,22 @@ But don't be afraid, there's a function to help us and it's called `importScript
 importScripts('file1.js');
 importScripts('file2.js', 'fileX.js');
 ```
+
+## Restrictions
+
+To prevent concurrency conflicts, the worker can access to only a few objects from the main thread.
+
+* `navigator`
+* `location` (read-only)
+* `XMLHttpRequest`
+
+`window`, `document`, `parent` and the DOM are **NOT** accessible inside the browser.
+
+The worker file, and files loaded inside it, must be on the same domain and respect the same scheme (http or https) as the page instanciating it.
+
+## Conclusion
+
+Some last words on the subject, I hope I helped you understand what kind of stuff you can do with Shared Workers and raised some ideas in your minds.
+The only problem I encountered was the debug part, Chrome Dev Tools allows to debug workers but not shared ones. So if someone knows how to do it, please leave a comment on the issue related to this article, thanks.
+
+And for browser compatibility, please refer to our dearest friend: [caniuse.com](http://caniuse.com/#feat=sharedworkers). Unfortunately, it's pretty limited right now.
