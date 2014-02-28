@@ -199,3 +199,15 @@ The code of the worker is mainly boilerplate code to setup named ports. Then it 
 
 With not that much of code you can setup directional communication between tabs/apps, and is extensible to as many sources that you want. However the code above does not cover the case where the user open the same app in multiple tabs, it would break the mechanism of identification. But it could be a good way to check if the user launched the same app twice, in the identification code in the worker if we see a source is already defined with the same name, we post a message back and alert the user to only use one instance of the app (and don't forget to remove the port from the `ports` array).
 
+## Sugar
+
+A nice improvement we could do in the worker would be to introduce a data transformer, so we could adapt the data structure depending on which source is requesting it. It would really help keep as much as possible agnostics the apps from one another.
+
+But as we can only specify one file for a worker, it wouldn't be really easy to put complex data manipulation into this single file. Especially if the number of apps communicating starts growing.
+
+But don't be afraid, there's a function to help us and it's called `importScripts`. In a page you add your scripts via the `script` tag, in the worker it's done through this function. You pass one or multiple files as arguments, and you can call the function as many times you want.
+
+```js
+importScripts('file1.js');
+importScripts('file2.js', 'fileX.js');
+```
