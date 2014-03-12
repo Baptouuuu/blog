@@ -34,7 +34,7 @@ worker.port.start();
 And the worker by itself looks like this:
 ```js
 //shared-worker.js
-self.addEventListener('connect', function(connectEvent) {
+self.addEventListener('connect', function(event) {
     var port = event.source;
 
     port.addEventListener('message', function (messageEvent) {
@@ -62,7 +62,7 @@ worker.port.close();
 ```js
 //shared-worker.js
 var ports = [];
-self.addEventListener('connect', function (connectEvent) {
+self.addEventListener('connect', function (event) {
     var port = event.source;
     ports.push(port);
     //listen to messages...
