@@ -31,29 +31,33 @@ The second example has gone hard on my nerves. I was working on a new feature on
 In a normal case (meaning merges instead of rebases), I would have gone for `git bisect` to find the faulty commit, which would have taken approximatively 5 minutes. But here it's of no help, as I'm sure it was the code made on the common branch that was breaking my code. And as I rebased, the code made by my colleagues are now behind of my work instead of being in parallel in the commit history. So the bisect wouldn't work as know even the point were my code was working it's now failing, and the faulty commit is now in a place were my work is not existing.
 
 Example with merge:
-> A
-> |\
-> | \
-> B  |
-> |  C  <- working commit
-> |  |
->  \ |
->    D  <- faulty commit that could be found via `bisect`
->    |
->    |
->    E  <- failing commit
+```
+ A
+ |\
+ | \
+ B  |
+ |  C  <- working commit
+ |  |
+  \ |
+    D  <- faulty commit that could be found via `bisect`
+    |
+    |
+    E  <- failing commit
+```
 
 Example with rebase:
-> A
-> |
-> |
-> B  <- faulty commit
->  \
->   \
->    C  <- working commit before rebase (now failing)
->    |
->    |
->    D  <- failing commit (as created after the rebase)
+```
+ A
+ |
+ |
+ B  <- faulty commit
+  \
+   \
+    C  <- working commit before rebase (now failing)
+    |
+    |
+    D  <- failing commit (as created after the rebase)
+```
 
 In this last example, you can't determine easily where it has gone wrong as know `C` is the child of a failing commit, but previously it was the child of a working one. Here, it's simple to determine what happened as there's only 4 commits, but imagine if you have hundreds of them.
 
