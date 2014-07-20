@@ -14,8 +14,8 @@ Even though I never liked to rebase, I tried to listen to those whom are using i
 
 Well, it's right, with the `rebase` you don't have a merge commit each time you want to update your branch with another one. (But, it's your first lie to the repo, as you say that you started your work from a new commit than the real one)
 
-Another answer was as we rebase, when you want to merge to the source branch you simply have a fast forward, and so a straight line; consequently it's easier when looking back to the history, you don't have to understand the subway map. (But still, you're looking at a bunch of lies)
-Each time I ear someone tell me it's good to have just one line of history, I have the feeling he tries to use git like it was SVN. If git has a good branching mechanism, why someone would want to use git as if there were no branches?!
+Another anwser was as we rebase, when you want to merge to the source branch you simply have a fast forward, and so a straight line; consequently it's easier when looking back to the history, you don't have to understand the subway map. (But still, you're looking at a bunch of lies)
+Each time I hear someone tell me it's good to have just one line of history, I have the feeling he tries to use git like it was SVN. If git has a good branching mechanism, why someone would want to use git as if there were no branches?!
 
 ## It will bite you
 
