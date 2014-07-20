@@ -6,7 +6,7 @@ Before jumping right to the point I want to make, just step back and think about
 
 We mainly use such tools to improve the collaborative work. But I see it more as the single point of truth for the projects. After all if those systems register all the things we do on code, it's to keep track on what's exactly happening on the code.
 
-That's why I don't like any tool that have a destructive effect on the repositories. Because it means you're lying to the repo. And I can't see in any way how lying to the system supposed to tell the only truth can benefits you or your teammates.
+That's why I don't like any tool that have a destructive effect on the repositories. Because it means you're lying to the repo. And I can't see in any way how lying to the system supposed to tell the only truth can benefit you or your teammates.
 
 ## Seems practical
 
