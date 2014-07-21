@@ -65,4 +65,4 @@ In result of this second example, I've lost almost a full day to figure out what
 
 ## Conclusion
 
-Tools such as `rebase` seems to help you keep things simple on your repo (history more readable, etc...), but once again the goal of the vcs is keep track of what's happening. In most cases you won't notice modifying the commit history is a bad habbit, but the day you'll really need to look back at what happened, you won't be able (at least easily) to figure out what happened and in which order.
+Tools such as `rebase` seems to help you keep things simple on your repo (history more readable, etc...), but once again the goal of the vcs is keep track of what's happening. In most cases you won't notice modifying the commit history is a bad habit, but the day you'll really need to look back at what happened, you won't be able (at least easily) to figure out what happened and in which order.
